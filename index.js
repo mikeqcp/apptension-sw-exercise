@@ -1,18 +1,11 @@
-import firebase from 'firebase';
-const config = {
-  apiKey: "AIzaSyCBpLRPfasKZWbwefb2BajvQrtx7r-NWwY",
-  authDomain: "sw-excercise.firebaseapp.com",
-  databaseURL: "https://sw-excercise.firebaseio.com",
-  projectId: "sw-excercise",
-  storageBucket: "sw-excercise.appspot.com",
-  messagingSenderId: "508880139950"
-};
-firebase.initializeApp(config);
-const database = firebase.database();
+import db from './src/firebase';
+import { initBackgroundSync, requestSync } from './src/backgroundSync';
 
 let counterValue = 0;
 
-firebase.database().ref('/counter').on('value', snapshot => {
+initBackgroundSync();
+
+db.ref('/counter').on('value', snapshot => {
   counterValue = snapshot.val();
   _updateDisplay();
 });
@@ -22,13 +15,12 @@ const _updateDisplay = () => {
 };
 
 const _sendToDB = () => {
-  firebase.database().ref('/counter').set(counterValue);
+  requestSync();
 };
 
 window.onload = () => {
   const increaseBtn = document.querySelector('#increase_btn');
   const decreaseBtn = document.querySelector('#decrease_btn');
-  const label = document.querySelector('#label');
 
   increaseBtn.addEventListener('click', () => {
     counterValue += 1;

@@ -1,11 +1,18 @@
-import db from './src/firebase';
+import Dexie from 'dexie';
+
+import firebaseDB from './src/firebase';
 import { initBackgroundSync, requestSync } from './src/backgroundSync';
+
+const indexedDB = new Dexie('CounterDB');
+indexedDB.version(1).stores({
+  counter: 'value'
+});
 
 let counterValue = 0;
 
 initBackgroundSync();
 
-db.ref('/counter').on('value', snapshot => {
+firebaseDB.ref('/counter').on('value', snapshot => {
   counterValue = snapshot.val();
   _updateDisplay();
 });
@@ -15,7 +22,11 @@ const _updateDisplay = () => {
 };
 
 const _sendToDB = () => {
-  requestSync();
+  indexedDB.counter.clear().then(() => {
+    indexedDB.counter.put({value: counterValue}).then(function () {
+      requestSync();
+    })
+  });
 };
 
 window.onload = () => {

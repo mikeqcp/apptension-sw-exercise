@@ -3,10 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>Webpack App</title>
+  <script src="/main.js"></script>
+
+  <style>
+    .notes {
+      margin: 50px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      padding: 10px;
+      background: yellow;
+      border: 1px solid black;
+      margin: 20px;
+    }
+  </style>
 </head>
 <body>
-  <button id="decrease_btn">-</button>
-  <label id="label">0</label>
-  <button id="increase_btn">+</button>
+  <div id="notes">
+
+  </div>
+
+  <form id="form">
+    <input type="text" name="title"/>
+    <input type="text" name="text"/>
+    <button>ADD</button>
+  </form>
 </body>
 </html>

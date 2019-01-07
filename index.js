@@ -1,43 +1,44 @@
-import firebase from 'firebase';
-const config = {
-  apiKey: "AIzaSyCBpLRPfasKZWbwefb2BajvQrtx7r-NWwY",
-  authDomain: "sw-excercise.firebaseapp.com",
-  databaseURL: "https://sw-excercise.firebaseio.com",
-  projectId: "sw-excercise",
-  storageBucket: "sw-excercise.appspot.com",
-  messagingSenderId: "508880139950"
-};
-firebase.initializeApp(config);
-const database = firebase.database();
+import fireDB from './firebase';
+import indexDB from './dexie';
+import uid from 'uuid/v1';
 
-let counterValue = 0;
-
-firebase.database().ref('/counter').on('value', snapshot => {
-  counterValue = snapshot.val();
-  _updateDisplay();
-});
-
-const _updateDisplay = () => {
-  label.innerHTML = counterValue;
+const _updateNotes = () => {
+    indexDB.notes.toArray().then(notes => {
+        const notesEl = document.querySelector('#notes');
+        notesEl.innerHTML = notes.map(n => {
+            return `
+        <div class="note">
+            <h2>[${n.id}] ${n.title}</h2>
+            <p>${n.text}</p>
+        </div>
+      `
+        }).join('');
+    });
 };
 
-const _sendToDB = () => {
-  firebase.database().ref('/counter').set(counterValue);
-};
 
 window.onload = () => {
-  const increaseBtn = document.querySelector('#increase_btn');
-  const decreaseBtn = document.querySelector('#decrease_btn');
-  const label = document.querySelector('#label');
+    _updateNotes();
 
-  increaseBtn.addEventListener('click', () => {
-    counterValue += 1;
-    _updateDisplay();
-    _sendToDB();
-  });
-  decreaseBtn.addEventListener('click', () => {
-    counterValue -= 1;
-    _updateDisplay();
-    _sendToDB();
-  });
+    fireDB.ref('/notes').on('value', snapshot => {
+        const notes = snapshot.val();
+        notes.forEach(n => indexDB.notes.put(n));
+    });
+
+    document.querySelector('#form button').addEventListener('click', e => {
+        e.preventDefault();
+
+        const form = document.querySelector('#form');
+        const data = {
+            id: uid(),
+            title: form.title.value,
+            text: form.text.value,
+        };
+
+        indexDB.notes.put(data);
+
+
+        _updateNotes();
+        return false;
+    });
 };

@@ -16,6 +16,8 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "firebase": "^5.5.3"
+    "dexie": "^2.0.4",
+    "firebase": "^5.5.3",
+    "uuid": "^3.3.2"
   }
 }

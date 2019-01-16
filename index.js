@@ -2,15 +2,18 @@ import fireDB from './firebase';
 import indexDB from './dexie';
 import uid from 'uuid/v1';
 import { initBackgroundSync, requestSync } from './backgroundSync';
+import {forEachObjIndexed} from "ramda";
 
 const _rerender = () => {
     indexDB.notes.toArray().then(notes => {
         const notesEl = document.querySelector('#notes');
         notesEl.innerHTML = notes.map(n => {
             return `
-        <div class="note">
-            <h2>${n.title}</h2>
-            <p>${n.text}</p>
+        <div class="note card blue-grey darken-1 col s5">
+            <div class="card-content white-text">
+                <h2 class="card-title">${n.title}</h2>
+                <p>${n.text}</p>
+            </div>
         </div>
       `
         }).join('');
@@ -24,7 +27,7 @@ window.onload = () => {
 
     fireDB.ref('/notes').on('value', snapshot => {
         const notes = snapshot.val();
-        notes.forEach(n => indexDB.notes.put(n));
+        forEachObjIndexed(n => indexDB.notes.put(n), notes);
     });
 
     document.querySelector('#form button').addEventListener('click', e => {

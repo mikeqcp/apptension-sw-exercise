@@ -3,32 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <title>Webpack App</title>
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
   <script src="/main.js"></script>
 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
   <style>
-    .notes {
+    h2, p {
+      margin: 0;
+    }
+
+    #notes {
       margin: 50px;
       display: flex;
       flex-wrap: wrap;
+
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .note {
-      padding: 10px;
-      background: yellow;
-      border: 1px solid black;
-      margin: 20px;
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div id="notes">
+  <div id="notes" class="row">
 
   </div>
 
   <form id="form">
-    <input type="text" name="title"/>
-    <input type="text" name="text"/>
-    <button>ADD</button>
+    <div class="input-field">
+      <input id="title" type="text" name="title"/>
+      <label for="title">Title</label>
+    </div>
+
+    <div class="input-field">
+      <input type="text" name="text" id="text"/>
+      <label for="text">Text</label>
+    </div>
+
+    <button class="waves-effect waves-light btn">
+      ADD
+      <i class="material-icons right">add</i>
+    </button>
   </form>
 </body>
 </html>

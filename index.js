@@ -1,14 +1,15 @@
 import fireDB from './firebase';
 import indexDB from './dexie';
 import uid from 'uuid/v1';
+import { initBackgroundSync, requestSync } from './backgroundSync';
 
-const _updateNotes = () => {
+const _rerender = () => {
     indexDB.notes.toArray().then(notes => {
         const notesEl = document.querySelector('#notes');
         notesEl.innerHTML = notes.map(n => {
             return `
         <div class="note">
-            <h2>[${n.id}] ${n.title}</h2>
+            <h2>${n.title}</h2>
             <p>${n.text}</p>
         </div>
       `
@@ -18,7 +19,8 @@ const _updateNotes = () => {
 
 
 window.onload = () => {
-    _updateNotes();
+    initBackgroundSync();
+    _rerender();
 
     fireDB.ref('/notes').on('value', snapshot => {
         const notes = snapshot.val();
@@ -36,9 +38,9 @@ window.onload = () => {
         };
 
         indexDB.notes.put(data);
+        requestSync();
 
-
-        _updateNotes();
+        _rerender();
         return false;
     });
 };

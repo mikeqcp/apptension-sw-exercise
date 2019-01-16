@@ -2,7 +2,7 @@ import fireDB from './firebase';
 import dexieDb from './dexie';
 
 self.addEventListener('sync', function (event) {
-    console.log('Im in sync()');
+    console.log('Im syncing');
     if (event.tag === 'SYNC_DATA') {
         event.waitUntil(syncData());
     }
